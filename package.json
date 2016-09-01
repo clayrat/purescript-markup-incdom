@@ -5,8 +5,8 @@
     "build": "pulp build && rimraf docs && pulp docs"
   },
   "devDependencies": {
-    "pulp": "^4.0.1",
-    "rimraf": "^2.4.1"
+    "pulp": "^9.0.1",
+    "rimraf": "^2.5.4"
   },
   "dependencies": {
     "incremental-dom": "^0.4.1"

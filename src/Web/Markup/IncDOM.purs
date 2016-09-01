@@ -1,21 +1,20 @@
 module Web.Markup.IncDOM (renderTo, renderToBody) where
 --------------------------------------------------------------------------------
 import Prelude
-import Data.Monoid
-import Data.Maybe
-import Data.Maybe.First
-import Data.Foldable
-import Data.Foreign
-import Data.Nullable
-import Control.Apply
-import Control.Monad.Eff
-import Web.Markup
+import Control.Monad.Eff (Eff)
+import Data.Foldable (foldMap, traverse_)
+import Data.Foreign (Foreign)
+import Data.Function.Eff  (EffFn2, EffFn1, mkEffFn1, runEffFn2, runEffFn1)
+import Data.Maybe (Maybe(..))
+import Data.Maybe.First (First(..), runFirst)
+import Data.Monoid (class Monoid)
+import Data.Nullable (Nullable, toNullable, toMaybe)
 import DOM (DOM ())
 import DOM.HTML (window)
 import DOM.HTML.Document (body)
 import DOM.HTML.Window (document)
 import DOM.HTML.Types (HTMLElement ())
-import Data.Function.Eff
+import Web.Markup (Attr, Tag, Key, Markup, Prop(..), markup)
 
 -- | Render `Markup` to a DOM element using virtual-dom.
 renderTo
@@ -43,7 +42,7 @@ renderMarkup m = runChained (markup tagf textf m) where
 -- | Converts `Prop`s to the corresponding incremental DOM render function.
 renderProp :: forall eff. Prop (Eff eff Unit) -> Render
 renderProp (Attr name val) = runEffFn2 _attr name val
-renderProp (Handler name go) = runEffFn2 _handler ("on" ++ name) (mkEffFn1 go)
+renderProp (Handler name go) = runEffFn2 _handler ("on" <> name) (mkEffFn1 go)
 renderProp _ = pure unit
 
 -- | Finds the first key in a collection of properties, if any.
@@ -78,4 +77,3 @@ instance chainedSemigroup :: (Apply f) => Semigroup (Chained f) where
 
 instance chainedMonoid :: (Applicative f) => Monoid (Chained f) where
   mempty = Chained (pure unit)
-
