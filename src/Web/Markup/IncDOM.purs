@@ -17,13 +17,13 @@ import DOM.HTML.Window (document)
 import DOM.HTML.Types (HTMLElement ())
 import Data.Function.Eff
 
--- | Render `Markup` to a DOM element using virtual-dom.
+-- | Render `Markup` to a DOM element using incremental-dom.
 renderTo
   :: forall eff. HTMLElement
   -> Markup (Eff (dom :: DOM | eff) Unit) -> Eff (dom :: DOM | eff) Unit
 renderTo e m = runEffFn2 _patch e (renderMarkup m)
 
--- | Render `Markup` to the body of the DOM using virtual-dom.
+-- | Render `Markup` to the body of the DOM using incremental-dom.
 renderToBody
   :: forall eff. Markup (Eff (dom :: DOM | eff) Unit)
   -> Eff (dom :: DOM | eff) Unit
