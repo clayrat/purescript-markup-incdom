@@ -9,6 +9,6 @@
     "rimraf": "^2.5.4"
   },
   "dependencies": {
-    "incremental-dom": "^0.4.1"
+    "incremental-dom": "^0.5.1"
   }
 }

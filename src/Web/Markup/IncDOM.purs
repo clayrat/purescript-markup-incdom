@@ -6,8 +6,9 @@ import Data.Foldable (foldMap, traverse_)
 import Data.Foreign (Foreign)
 import Data.Function.Eff  (EffFn2, EffFn1, mkEffFn1, runEffFn2, runEffFn1)
 import Data.Maybe (Maybe(..))
-import Data.Maybe.First (First(..), runFirst)
-import Data.Monoid (class Monoid)
+import Data.Maybe.First (First(..))
+import Data.Monoid (class Monoid) 
+import Data.Newtype (unwrap)
 import Data.Nullable (Nullable, toNullable, toMaybe)
 import DOM (DOM ())
 import DOM.HTML (window)
@@ -47,7 +48,7 @@ renderProp _ = pure unit
 
 -- | Finds the first key in a collection of properties, if any.
 findKey :: forall e. Array (Prop e) -> Maybe Key
-findKey = runFirst <<< foldMap \p -> First $ case p of
+findKey = unwrap <<< foldMap \p -> First $ case p of
   Key k -> Just k
   _ -> Nothing
 
