@@ -10,7 +10,7 @@
     "output"
   ],
   "dependencies": {
-    "purescript-markup": "git://github.com/clayrat/purescript-markup#ecbdeccc7a372afaf7c811d62217f0e89e0e8832",
+    "purescript-markup": "git://github.com/clayrat/purescript-markup#014c957a4712d7e3570d24ec57b9e7bd6212a8b3",
     "purescript-dom": "^3.3.0",
     "purescript-eff-functions": "^2.0.0"
   }
