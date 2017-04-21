@@ -1,15 +1,15 @@
 module Web.Markup.IncDOM (renderTo, renderToBody) where
 --------------------------------------------------------------------------------
 import Prelude
-import Control.Monad.Eff (Eff)
+import Control.Monad.Eff (Eff, kind Effect)
+import Control.Monad.Eff.Uncurried (EffFn1, EffFn2, mkEffFn1, runEffFn1, runEffFn2)
 import Data.Foldable (foldMap, traverse_)
 import Data.Foreign (Foreign)
-import Data.Function.Eff  (EffFn2, EffFn1, mkEffFn1, runEffFn2, runEffFn1)
 import Data.Maybe (Maybe(..))
 import Data.Maybe.First (First(..))
 import Data.Monoid (class Monoid) 
 import Data.Newtype (unwrap)
-import Data.Nullable (Nullable, toNullable, toMaybe)
+import Data.Nullable (Nullable, toNullable)
 import DOM (DOM ())
 import DOM.HTML (window)
 import DOM.HTML.Document (body)
@@ -27,7 +27,7 @@ renderTo e m = runEffFn2 _patch e (renderMarkup m)
 renderToBody
   :: forall eff. Markup (Eff (dom :: DOM | eff) Unit)
   -> Eff (dom :: DOM | eff) Unit
-renderToBody m = window >>= document >>= body >>= toMaybe >>> traverse_ (flip renderTo m)
+renderToBody m = window >>= document >>= body >>= traverse_ (flip renderTo m)
 
 -- | Converts `Markup` to an incremental DOM render function.
 renderMarkup :: forall eff. Markup (Eff eff Unit) -> Render
@@ -57,7 +57,7 @@ findKey = unwrap <<< foldMap \p -> First $ case p of
 type Render = Eff (incDOM :: INCDOM) Unit
 
 -- | Effect for the incremental DOM render function.
-foreign import data INCDOM :: !
+foreign import data INCDOM :: Effect
 
 foreign import _elementOpenStart :: EffFn2 (incDOM :: INCDOM) Tag (Nullable Key) Unit
 foreign import _elementOpenEnd :: Eff (incDOM :: INCDOM) Unit
